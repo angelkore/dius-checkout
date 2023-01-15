@@ -4,6 +4,7 @@ import { Checkout } from "../checkout";
 import { TEST_PRODUCTS } from "./utils";
 import { BulkQtyPricingRule } from "../pricingRules/bulkQtyPricingRule";
 import { BulkFlatPricingRule } from "../pricingRules/bulkFlatPricingRule";
+import { BundlePricingRule } from "../pricingRules/bundlePricingRule";
 
 let testProducts: Product[] = TEST_PRODUCTS;
 
@@ -14,6 +15,10 @@ beforeEach(() => {
 })
 
 describe("checkout", () => {
+    it("should add a product when scanned", () => {
+        checkout.scan(testProducts[0]);
+    })
+
     describe("no pricing rules", () => {
         it("should give the correct price for a checkout", () => {
             const expectedTotal: number = testProducts[0].price + testProducts[1].price;
@@ -58,12 +63,17 @@ describe("checkout", () => {
         const bulkQtyProduct = testProducts[0];
         const bulkFlatProduct = testProducts[1];
 
+        const bundlePaidProduct = testProducts[2];
+        const bundleFreeProduct = testProducts[3];
+
         const bulkQty = 3;
         const qtyPricingRule = new BulkQtyPricingRule(bulkQtyProduct, bulkQty);
         
         const flatDiscountValue = 123;
         const flatQty = 3;
         const flatPricingRule = new BulkFlatPricingRule(bulkFlatProduct, flatQty, flatDiscountValue);
+
+        const bundlePricingRule = new BundlePricingRule(bundlePaidProduct, bundleFreeProduct);
 
         describe("bulk qty", () => {
             beforeEach(() => {
@@ -114,9 +124,25 @@ describe("checkout", () => {
             })
         })
 
+        describe("bundle", () => {
+            beforeEach(() => {
+                checkout.setPricingRules([bundlePricingRule]);
+            })
+
+            it("should return correct total with bundle pricing rule applied", () => {     
+                const expectedTotal: number = bundlePaidProduct.price ;
+        
+                checkout.scan(bundlePaidProduct);
+                checkout.scan(bundleFreeProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);
+            })
+        })
+
+
         describe("multiple rules", () => {
             beforeEach(() => {
-                checkout.setPricingRules([flatPricingRule, qtyPricingRule]);
+                checkout.setPricingRules([flatPricingRule, qtyPricingRule, bundlePricingRule]);
             })
 
             it("should return correct total for both qty and flat pricing applied with applicable products", () => {     
@@ -159,6 +185,32 @@ describe("checkout", () => {
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkFlatProduct);
                 checkout.scan(bulkFlatProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);            
+            })
+
+            it("should return correct total with bundle discount applied", () => {                
+                const expectedTotal: number = bundlePaidProduct.price;
+        
+                checkout.scan(bundlePaidProduct);
+                checkout.scan(bundleFreeProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);            
+            })
+
+            // TODO: Should this scenario be valid? Multiple discounts in one go? Would ask for a better scope probs
+            it("should return correct total with bulk discount, with bulk discount also being a part of a free bundle promotion", () => { 
+                const newFlatRule = new BulkQtyPricingRule(bundlePaidProduct, 3); 
+                const newBundleRule = new BundlePricingRule(bundlePaidProduct, bundleFreeProduct);               
+              
+                checkout.setPricingRules([newFlatRule, newBundleRule]);
+
+                const expectedTotal: number = bundlePaidProduct.price * 2;
+                
+                checkout.scan(bundlePaidProduct);
+                checkout.scan(bundlePaidProduct);
+                checkout.scan(bundlePaidProduct);
+                checkout.scan(bundleFreeProduct);
         
                 expect(checkout.total()).toEqual(expectedTotal);            
             })

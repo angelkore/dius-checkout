@@ -9,12 +9,13 @@ export class Checkout {
         this.pricingRules = pricingRules;
     }
 
-    setPricingRules(pricingRules: IPricingRule[]) {
+    public setPricingRules(pricingRules: IPricingRule[]) {
+        // TODO: Should probably check there's no duplicates in this array, else double discounts for everybody
         this.pricingRules = pricingRules;
     }
     
     // Work out the total discount applicable in the cart
-    discount(): number {
+    private discount(): number {
         let totalDiscount: number = 0;
 
         this.pricingRules.forEach((rule) => {
@@ -25,7 +26,7 @@ export class Checkout {
     }
 
     // Gets value for all prices in cart
-    subtotal(): number {
+    private subtotal(): number {
         let total: number = 0;
         this.scannedProducts.forEach((product) => {
             total += product.price;
@@ -35,11 +36,11 @@ export class Checkout {
     }
 
     // Finalized price including discounts
-    total(): number {
+    public total(): number {
         return this.subtotal() - this.discount();
     }
 
-    scan(product: Product) {
+    public scan(product: Product) {
         this.scannedProducts.push(product);
     }
 }

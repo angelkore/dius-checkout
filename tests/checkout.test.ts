@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from "@jest/globals";
 import { Product } from "../product";
 import { Checkout } from "../checkout";
-import { TEST_PRODUCTS } from "./utils";
+import { TEST_PRODUCTS } from "../utils";
 import { BulkQtyPricingRule } from "../pricingRules/bulkQtyPricingRule";
 import { BulkFlatPricingRule } from "../pricingRules/bulkFlatPricingRule";
 import { BundlePricingRule } from "../pricingRules/bundlePricingRule";
@@ -70,7 +70,7 @@ describe("checkout", () => {
         const qtyPricingRule = new BulkQtyPricingRule(bulkQtyProduct, bulkQty);
         
         const flatDiscountValue = 123;
-        const flatQty = 3;
+        const flatQty = 2;
         const flatPricingRule = new BulkFlatPricingRule(bulkFlatProduct, flatQty, flatDiscountValue);
 
         const bundlePricingRule = new BundlePricingRule(bundlePaidProduct, bundleFreeProduct);
@@ -106,7 +106,7 @@ describe("checkout", () => {
             })
 
             it("should return correct total with flat pricing rule applied", () => {     
-                const expectedTotal: number = bulkFlatProduct.price * 3 - flatDiscountValue;
+                const expectedTotal: number = flatDiscountValue * 3;
         
                 checkout.scan(bulkFlatProduct);
                 checkout.scan(bulkFlatProduct);
@@ -147,8 +147,8 @@ describe("checkout", () => {
 
             it("should return correct total for both qty and flat pricing applied with applicable products", () => {     
                 const expectedTotal: number = 
-                    bulkQtyProduct.price * 3 + bulkFlatProduct.price * 3
-                    - flatDiscountValue // For Flat discount
+                    bulkQtyProduct.price * 3
+                    + flatDiscountValue * 3 // For Flat discount
                     - bulkQtyProduct.price // for Qty Discount
         
                 checkout.scan(bulkQtyProduct);
@@ -163,8 +163,8 @@ describe("checkout", () => {
     
             it("should return correct total for both qty and flat pricing applied, but only enough for flat discount", () => {                
                 const expectedTotal: number = 
-                    bulkQtyProduct.price * 2 + bulkFlatProduct.price * 3
-                    - flatDiscountValue // For Flat discount
+                    bulkQtyProduct.price * 2 +
+                    flatDiscountValue * 3 // For Flat discount
         
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkQtyProduct);

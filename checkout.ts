@@ -40,7 +40,13 @@ export class Checkout {
         return this.subtotal() - this.discount();
     }
 
+    public clear() {
+        this.scannedProducts = [];
+        console.log("Cleared scanned products.");
+    }
+
     public scan(product: Product) {
+        console.log(`Scanning product sku=${product.sku}`);
         this.scannedProducts.push(product);
     }
 }

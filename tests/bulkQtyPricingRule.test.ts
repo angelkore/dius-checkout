@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 import { Product } from "../product";
-import { TEST_PRODUCTS } from "./utils";
+import { TEST_PRODUCTS } from "../utils";
 import { BulkQtyPricingRule } from "../pricingRules/bulkQtyPricingRule";
 import { IPricingRule } from "../pricingRules/IPricingRule";
 

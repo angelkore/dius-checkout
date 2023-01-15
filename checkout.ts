@@ -5,11 +5,27 @@ export class Checkout {
     private pricingRules: Array<IPricingRule> = [];
     private scannedProducts: Array<Product> = [];
 
-    constructor(pricingRules: Array<IPricingRule>) {
+    constructor(pricingRules: Array<IPricingRule> = []) {
         this.pricingRules = pricingRules;
     }
 
-    total(): number {
+    setPricingRules(pricingRules: IPricingRule[]) {
+        this.pricingRules = pricingRules;
+    }
+    
+    // Work out the total applicable in the cart
+    discount(): number {
+        let totalDiscount: number = 0;
+
+        this.pricingRules.forEach((rule) => {
+            totalDiscount += rule.calculateDiscountOnProductList(this.scannedProducts);
+        })
+
+        return totalDiscount;
+    }
+
+    // Gets value for all prices in cart
+    subtotal(): number {
         let total: number = 0;
         this.scannedProducts.forEach((product) => {
             total += product.price;
@@ -18,8 +34,12 @@ export class Checkout {
         return total;
     }
 
+    // Finalized price including discounts
+    total(): number {
+        return this.subtotal() - this.discount();
+    }
+
     scan(product: Product) {
         this.scannedProducts.push(product);
-        // TODO: Maybe apply pricing rules here? Or do we work out discounts at total()? 
     }
 }

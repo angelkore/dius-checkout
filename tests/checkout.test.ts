@@ -62,7 +62,8 @@ describe("checkout", () => {
         const qtyPricingRule = new BulkQtyDiscountRule(bulkQtyProduct, bulkQty);
         
         const flatDiscountValue = 123;
-        const flatPricingRule = new BulkFlatDiscountRule(bulkFlatProduct, bulkQty, flatDiscountValue);
+        const flatQty = 3;
+        const flatPricingRule = new BulkFlatDiscountRule(bulkFlatProduct, flatQty, flatDiscountValue);
 
         describe("bulk qty", () => {
             beforeEach(() => {
@@ -134,14 +135,28 @@ describe("checkout", () => {
                 expect(checkout.total()).toEqual(expectedTotal);
             })
     
-            it("should return correct total for both qty and flat pricing applied, but only enough for flat qty discount", () => {                
+            it("should return correct total for both qty and flat pricing applied, but only enough for flat discount", () => {                
                 const expectedTotal: number = 
-                    bulkQtyProduct.price * 3 + bulkFlatProduct.price * 3
+                    bulkQtyProduct.price * 2 + bulkFlatProduct.price * 3
                     - flatDiscountValue // For Flat discount
         
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);            
+            })
+
+            it("should return correct total for both qty and flat pricing applied, but only enough for qty discount", () => {                
+                const expectedTotal: number = 
+                    bulkQtyProduct.price * 3 + bulkFlatProduct.price * 2
+                    - bulkQtyProduct.price // for Qty Discount
+        
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkFlatProduct);
                 checkout.scan(bulkFlatProduct);
         

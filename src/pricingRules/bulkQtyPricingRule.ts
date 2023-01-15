@@ -13,7 +13,6 @@ export class BulkQtyPricingRule implements IPricingRule {
         
         const discountTotal = this.paidProduct.price;
 
-        // Does the quantity of products mean a discount is coming??
         // TODO: What if we buy 6 Apple TV's? Do we get two for free, or just one?
         return applicableProducts.length >= this.bulkQty ? discountTotal : 0;
     }

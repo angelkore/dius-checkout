@@ -11,7 +11,7 @@ let testProducts: Product[] = TEST_PRODUCTS;
 let checkout: Checkout;
 
 beforeEach(() => {
-    checkout = new Checkout([]);
+    checkout = new Checkout();
 })
 
 describe("checkout", () => {
@@ -47,7 +47,7 @@ describe("checkout", () => {
             checkout.scan(testProducts[0]);
             checkout.scan(testProducts[1]);
     
-            expect(checkout.total()).toEqual(expectedTotal)
+            expect(checkout.getTotal()).toEqual(expectedTotal)
         })
     
         it("should give the correct price for multiple scanned products", () => {
@@ -60,7 +60,7 @@ describe("checkout", () => {
             checkout.scan(testProduct);
             checkout.scan(testProduct);
     
-            expect(checkout.total()).toEqual(expectedTotal);
+            expect(checkout.getTotal()).toEqual(expectedTotal);
         })
     
         
@@ -76,7 +76,7 @@ describe("checkout", () => {
             checkout.scan(testProduct1);
             checkout.scan(testProduct2)
     
-            expect(checkout.total()).toEqual(expectedTotal);
+            expect(checkout.getTotal()).toEqual(expectedTotal);
         })
     })
     
@@ -108,7 +108,7 @@ describe("checkout", () => {
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkQtyProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);
+                expect(checkout.getTotal()).toEqual(expectedTotal);
             })
     
             it("should return correct total with qty pricing rule applied, but not enough applicable products in cart to meet rule", () => {                
@@ -116,7 +116,7 @@ describe("checkout", () => {
         
                 checkout.scan(bulkQtyProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);
+                expect(checkout.getTotal()).toEqual(expectedTotal);
             })
         })
         
@@ -133,7 +133,7 @@ describe("checkout", () => {
                 checkout.scan(bulkFlatProduct);
                 checkout.scan(bulkFlatProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);
+                expect(checkout.getTotal()).toEqual(expectedTotal);
             })
     
             it("should return correct total with flat pricing rule applied, but not enough applicable products in cart to meet rule", () => {                
@@ -141,7 +141,7 @@ describe("checkout", () => {
         
                 checkout.scan(bulkFlatProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);
+                expect(checkout.getTotal()).toEqual(expectedTotal);
             })
         })
 
@@ -156,7 +156,7 @@ describe("checkout", () => {
                 checkout.scan(bundlePaidProduct);
                 checkout.scan(bundleFreeProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);
+                expect(checkout.getTotal()).toEqual(expectedTotal);
             })
         })
 
@@ -169,8 +169,8 @@ describe("checkout", () => {
             it("should return correct total for both qty and flat pricing applied with applicable products", () => {     
                 const expectedTotal: number = 
                     bulkQtyProduct.price * 3
-                    + flatDiscountValue * 3 // For Flat discount
-                    - bulkQtyProduct.price // for Qty Discount
+                    + flatDiscountValue * 3 // For Flat price rule
+                    - bulkQtyProduct.price // for Qty price rule
         
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkQtyProduct);
@@ -179,13 +179,13 @@ describe("checkout", () => {
                 checkout.scan(bulkFlatProduct);
                 checkout.scan(bulkFlatProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);
+                expect(checkout.getTotal()).toEqual(expectedTotal);
             })
     
-            it("should return correct total for both qty and flat pricing applied, but only enough for flat discount", () => {                
+            it("should return correct total for both qty and flat pricing applied, but only enough for flat price rule", () => {                
                 const expectedTotal: number = 
                     bulkQtyProduct.price * 2 +
-                    flatDiscountValue * 3 // For Flat discount
+                    flatDiscountValue * 3 // For Flat price rule
         
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkQtyProduct);
@@ -193,13 +193,13 @@ describe("checkout", () => {
                 checkout.scan(bulkFlatProduct);
                 checkout.scan(bulkFlatProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);            
+                expect(checkout.getTotal()).toEqual(expectedTotal);            
             })
 
-            it("should return correct total for both qty and flat pricing applied, but only enough for qty discount", () => {                
+            it("should return correct total for both qty and flat pricing applied, but only enough for qty price rule", () => {                
                 const expectedTotal: number = 
                     bulkQtyProduct.price * 3 + bulkFlatProduct.price * 2
-                    - bulkQtyProduct.price // for Qty Discount
+                    - bulkQtyProduct.price // for Qty price rule
         
                 checkout.scan(bulkQtyProduct);
                 checkout.scan(bulkQtyProduct);
@@ -207,20 +207,20 @@ describe("checkout", () => {
                 checkout.scan(bulkFlatProduct);
                 checkout.scan(bulkFlatProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);            
+                expect(checkout.getTotal()).toEqual(expectedTotal);            
             })
 
-            it("should return correct total with bundle discount applied", () => {                
+            it("should return correct total with bundle price rule applied", () => {                
                 const expectedTotal: number = bundlePaidProduct.price;
         
                 checkout.scan(bundlePaidProduct);
                 checkout.scan(bundleFreeProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);            
+                expect(checkout.getTotal()).toEqual(expectedTotal);            
             })
 
-            // TODO: Should this scenario be valid? Multiple discounts in one go? Would ask for a better scope probs
-            it("should return correct total with bulk discount, with bulk discount also being a part of a free bundle promotion", () => { 
+            // TODO: Should this scenario be valid? Multiple price rules in one go? Would ask for a better scope probs
+            it("should return correct total with bulk price rule, with product also being a part of a free bundle price rule", () => { 
                 const newFlatRule = new BulkQtyPricingRule(bundlePaidProduct, 3); 
                 const newBundleRule = new BundlePricingRule(bundlePaidProduct, bundleFreeProduct);               
               
@@ -233,7 +233,7 @@ describe("checkout", () => {
                 checkout.scan(bundlePaidProduct);
                 checkout.scan(bundleFreeProduct);
         
-                expect(checkout.total()).toEqual(expectedTotal);            
+                expect(checkout.getTotal()).toEqual(expectedTotal);            
             })
         })
     })

@@ -26,7 +26,7 @@ checkout.scan(atv);
 checkout.scan(atv);
 checkout.scan(atv);
 checkout.scan(vga);
-console.log(`Total price for Scenario 1 = ${formatNumberToCurrency(checkout.total())} - expected Value = $249.00`);
+console.log(`Total price for Scenario 1 = ${formatNumberToCurrency(checkout.getTotal())} - expected Value = $249.00`);
 checkout.clear();
 
 // Scenario 2
@@ -37,14 +37,14 @@ checkout.scan(atv);
 checkout.scan(ipd);
 checkout.scan(ipd);
 checkout.scan(ipd);
-console.log(`Total price for Scenario 2 = ${formatNumberToCurrency(checkout.total())} - expected Value = $2718.95`);
+console.log(`Total price for Scenario 2 = ${formatNumberToCurrency(checkout.getTotal())} - expected Value = $2718.95`);
 checkout.clear();
 
 // Scenario 3
 checkout.scan(mbp);
 checkout.scan(vga);
 checkout.scan(ipd);
-console.log(`Total price for Scenario 3 = ${formatNumberToCurrency(checkout.total())} - expected Value = $1949.98`);
+console.log(`Total price for Scenario 3 = ${formatNumberToCurrency(checkout.getTotal())} - expected Value = $1949.98`);
 checkout.clear();
 
 

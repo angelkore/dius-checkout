@@ -1,9 +1,9 @@
 import { describe, expect, it, beforeEach } from "@jest/globals";
 import { Product } from "../product";
 import { Checkout } from "../checkout";
-import { IPricingRule } from "../pricingRules/IPricingRule";
 import { TEST_PRODUCTS } from "./utils";
-import { BulkPricingRule } from "../pricingRules/BulkPricingRule";
+import { BulkQtyDiscountRule } from "../pricingRules/bulkQtyDiscountRule";
+import { BulkFlatDiscountRule } from "../pricingRules/bulkFlatDiscountRule";
 
 let testProducts: Product[] = TEST_PRODUCTS;
 
@@ -55,20 +55,98 @@ describe("checkout", () => {
     })
     
     describe("with pricing rules", () => {
-        const bulkProduct = testProducts[0];
+        const bulkQtyProduct = testProducts[0];
+        const bulkFlatProduct = testProducts[1];
+
         const bulkQty = 3;
-        const bulkPricingRule = new BulkPricingRule(bulkProduct, bulkQty);
+        const qtyPricingRule = new BulkQtyDiscountRule(bulkQtyProduct, bulkQty);
         
-        it("should return correct total with bulk pricing rule applied", () => {     
-            checkout.setPricingRules([bulkPricingRule]);
-       
-            const expectedTotal: number = bulkProduct.price * 2;
+        const flatDiscountValue = 123;
+        const flatPricingRule = new BulkFlatDiscountRule(bulkFlatProduct, bulkQty, flatDiscountValue);
+
+        describe("bulk qty", () => {
+            beforeEach(() => {
+                checkout.setPricingRules([qtyPricingRule]);
+            })
+
+            it("should return correct total with qty pricing rule applied", () => {                
+                const expectedTotal: number = bulkQtyProduct.price * 2;
+        
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkQtyProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);
+            })
     
-            checkout.scan(bulkProduct);
-            checkout.scan(bulkProduct);
-            checkout.scan(bulkProduct);
+            it("should return correct total with qty pricing rule applied, but not enough applicable products in cart to meet rule", () => {                
+                const expectedTotal: number = bulkQtyProduct.price;
+        
+                checkout.scan(bulkQtyProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);
+            })
+        })
+        
+        
+        describe("bulk flat", () => {
+            beforeEach(() => {
+                checkout.setPricingRules([flatPricingRule]);
+            })
+
+            it("should return correct total with flat pricing rule applied", () => {     
+                const expectedTotal: number = bulkFlatProduct.price * 3 - flatDiscountValue;
+        
+                checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);
+            })
     
-            expect(checkout.total()).toEqual(expectedTotal);
+            it("should return correct total with flat pricing rule applied, but not enough applicable products in cart to meet rule", () => {                
+                const expectedTotal: number = bulkFlatProduct.price;
+        
+                checkout.scan(bulkFlatProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);
+            })
+        })
+
+        describe("multiple rules", () => {
+            beforeEach(() => {
+                checkout.setPricingRules([flatPricingRule, qtyPricingRule]);
+            })
+
+            it("should return correct total for both qty and flat pricing applied with applicable products", () => {     
+                const expectedTotal: number = 
+                    bulkQtyProduct.price * 3 + bulkFlatProduct.price * 3
+                    - flatDiscountValue // For Flat discount
+                    - bulkQtyProduct.price // for Qty Discount
+        
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);
+            })
+    
+            it("should return correct total for both qty and flat pricing applied, but only enough for flat qty discount", () => {                
+                const expectedTotal: number = 
+                    bulkQtyProduct.price * 3 + bulkFlatProduct.price * 3
+                    - flatDiscountValue // For Flat discount
+        
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkQtyProduct);
+                checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+                checkout.scan(bulkFlatProduct);
+        
+                expect(checkout.total()).toEqual(expectedTotal);            
+            })
         })
     })
 })

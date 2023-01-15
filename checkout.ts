@@ -13,7 +13,7 @@ export class Checkout {
         this.pricingRules = pricingRules;
     }
     
-    // Work out the total applicable in the cart
+    // Work out the total discount applicable in the cart
     discount(): number {
         let totalDiscount: number = 0;
 

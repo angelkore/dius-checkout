@@ -1,15 +1,18 @@
 import { describe, expect, it } from "@jest/globals";
 import { Product } from "../product";
 import { TEST_PRODUCTS } from "./utils";
-import { BulkPricingRule } from "../pricingRules/BulkPricingRule";
 import { IPricingRule } from "../pricingRules/IPricingRule";
+import { BulkFlatDiscountRule } from "../pricingRules/bulkFlatDiscountRule";
 
 const BULK_PRODUCT = TEST_PRODUCTS[0];
 const OTHER_PRODUCT = TEST_PRODUCTS[1];
 
-const PRICING_RULE: IPricingRule = new BulkPricingRule(BULK_PRODUCT, 3);
+const DISCOUNT_QTY = 3;
+const DISCOUNT_VALUE = 123;
 
-describe("pricing rule - bulk", () => {
+const PRICING_RULE: IPricingRule = new BulkFlatDiscountRule(BULK_PRODUCT, DISCOUNT_QTY, DISCOUNT_VALUE);
+
+describe("pricing rule - bulk flat", () => {
     it("should give a discount of 0 if not enough items are in the checkout cart", () => {
         const testCart: Product[] = [
             BULK_PRODUCT,
@@ -19,14 +22,14 @@ describe("pricing rule - bulk", () => {
         expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(0);
     })
 
-    it("should give a discount of the product's value if enough are added to cart", () => {
+    it("should give a discount of the discount value if enough are added to cart", () => {
         const testCart: Product[] = [
             BULK_PRODUCT,
             BULK_PRODUCT,
             BULK_PRODUCT,        
         ]
 
-        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(BULK_PRODUCT.price);
+        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(DISCOUNT_VALUE);
     })
 
     it("should only give a single discount if there are many of the same product added", () => {
@@ -36,7 +39,7 @@ describe("pricing rule - bulk", () => {
             testCart.push(BULK_PRODUCT);
         }
 
-        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(BULK_PRODUCT.price);
+        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(DISCOUNT_VALUE);
     })
 
     it("should give a discount if the cart has enough for the rule, plus other items", () => {
@@ -48,6 +51,6 @@ describe("pricing rule - bulk", () => {
             OTHER_PRODUCT       
         ]
 
-        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(BULK_PRODUCT.price);
+        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(DISCOUNT_VALUE);
     })
 })

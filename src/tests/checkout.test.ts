@@ -15,8 +15,29 @@ beforeEach(() => {
 })
 
 describe("checkout", () => {
-    it("should add a product when scanned", () => {
+    it("should add products to the checkout when scanned", () => {
         checkout.scan(testProducts[0]);
+
+        expect(checkout.getScannedProducts()).toEqual([testProducts[0]]);
+    })
+
+    it("should return all scanned items when get calling", () => {
+        checkout.scan(testProducts[0]);
+        checkout.scan(testProducts[1]);
+        checkout.scan(testProducts[2]);
+        checkout.scan(testProducts[1]);
+
+        expect(checkout.getScannedProducts()).toEqual([testProducts[0], testProducts[1], testProducts[2], testProducts[1]]);
+    })
+
+    it("should remove existing products when cleared", () => {
+        checkout.scan(testProducts[0]);
+        checkout.scan(testProducts[0]);
+        checkout.scan(testProducts[0]);
+
+        checkout.clear();
+
+        expect(checkout.getScannedProducts()).toEqual([]);
     })
 
     describe("no pricing rules", () => {

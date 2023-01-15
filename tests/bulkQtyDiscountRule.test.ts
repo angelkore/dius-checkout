@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@jest/globals";
 import { Product } from "../product";
 import { TEST_PRODUCTS } from "./utils";
-import { BulkQtyDiscountRule } from "../pricingRules/bulkQtyDiscountRule";
+import { BulkQtyDiscountRule } from "../pricingRules/bulkQtyPricingRule";
 import { IPricingRule } from "../pricingRules/IPricingRule";
 
 const BULK_PRODUCT = TEST_PRODUCTS[0];

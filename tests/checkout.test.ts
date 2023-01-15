@@ -2,8 +2,8 @@ import { describe, expect, it, beforeEach } from "@jest/globals";
 import { Product } from "../product";
 import { Checkout } from "../checkout";
 import { TEST_PRODUCTS } from "./utils";
-import { BulkQtyDiscountRule } from "../pricingRules/bulkQtyDiscountRule";
-import { BulkFlatDiscountRule } from "../pricingRules/bulkFlatDiscountRule";
+import { BulkQtyDiscountRule } from "../pricingRules/bulkQtyPricingRule";
+import { BulkFlatDiscountRule } from "../pricingRules/bulkFlatPricingRule";
 
 let testProducts: Product[] = TEST_PRODUCTS;
 

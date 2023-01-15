@@ -1,0 +1,14 @@
+{
+  "name": "checkout",
+  "version": "1.0.0",
+  "description": "dius-checkout test",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^29.3.1"
+  }
+}

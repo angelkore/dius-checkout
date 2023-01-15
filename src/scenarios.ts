@@ -13,9 +13,11 @@ const vga: Product = new Product("vga", "VGA Adapter", 3000);
 const checkout = new Checkout();
 
 // Add all our starting specials
-const tvDeal = new BulkQtyPricingRule(ipd, 3);
-const ipadDeal = new BulkFlatPricingRule(ipd, 4, 49999)
+const tvDeal = new BulkQtyPricingRule(atv, 3);
+const ipadDeal = new BulkFlatPricingRule(ipd, 4, 49999);
 const vgaDeal = new BundlePricingRule(mbp, vga);
+
+checkout.setPricingRules([tvDeal, ipadDeal, vgaDeal]);
 
 // Now, lets run through some real scenarios!
 
@@ -26,7 +28,6 @@ checkout.scan(atv);
 checkout.scan(vga);
 console.log(`Total price for Scenario 1 = ${formatNumberToCurrency(checkout.total())} - expected Value = $249.00`);
 checkout.clear();
-
 
 // Scenario 2
 checkout.scan(atv);

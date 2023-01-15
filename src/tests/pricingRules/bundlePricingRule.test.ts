@@ -1,14 +1,12 @@
 import { describe, expect, it } from "@jest/globals";
-import { Product } from "../product";
-import { TEST_PRODUCTS } from "../utils";
-import { BulkQtyPricingRule } from "../pricingRules/bulkQtyPricingRule";
-import { IPricingRule } from "../pricingRules/IPricingRule";
-import { BundlePricingRule } from "../pricingRules/bundlePricingRule";
+import { IPricingRule } from "../../pricingRules/IPricingRule";
+import { BundlePricingRule } from "../../pricingRules/bundlePricingRule";
+import { Product } from "../../product";
+import { TEST_PRODUCTS } from "../../utils";
 
 const PAID_PRODUCT = TEST_PRODUCTS[0];
 const FREE_PRODUCT = TEST_PRODUCTS[1];
 const OTHER_PRODUCT = TEST_PRODUCTS[2];
-
 
 const PRICING_RULE: IPricingRule = new BundlePricingRule(PAID_PRODUCT, FREE_PRODUCT);
 

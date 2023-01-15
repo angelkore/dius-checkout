@@ -8,6 +8,5 @@ export const TEST_PRODUCTS: Product[] = [
 ]
 
 export function formatNumberToCurrency(total: number) {
-    return Intl.NumberFormat('en-US', {style: 'currency', currency: 'target currency'})
-    .format(total);  
+    return `$${(total/100).toFixed( 2 )}`
 }

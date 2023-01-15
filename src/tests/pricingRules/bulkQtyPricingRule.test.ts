@@ -1,8 +1,8 @@
 import { describe, expect, it } from "@jest/globals";
-import { Product } from "../product";
-import { TEST_PRODUCTS } from "../utils";
-import { BulkQtyPricingRule } from "../pricingRules/bulkQtyPricingRule";
-import { IPricingRule } from "../pricingRules/IPricingRule";
+import { IPricingRule } from "../../pricingRules/IPricingRule";
+import { BulkQtyPricingRule } from "../../pricingRules/bulkQtyPricingRule";
+import { Product } from "../../product";
+import { TEST_PRODUCTS } from "../../utils";
 
 const BULK_PRODUCT = TEST_PRODUCTS[0];
 const OTHER_PRODUCT = TEST_PRODUCTS[1];

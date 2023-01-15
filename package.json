@@ -4,7 +4,9 @@
   "description": "dius-checkout test",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest src/",
+    "build": "npx tsc",
+    "scenarios": "node ./build/scenarios.js"
   },
   "author": "Callan",
   "license": "ISC",

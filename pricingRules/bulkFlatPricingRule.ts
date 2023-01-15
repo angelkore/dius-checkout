@@ -1,7 +1,7 @@
 import { Product } from "../product";
 import { IPricingRule } from "./IPricingRule";
 
-export class BulkFlatDiscountRule implements IPricingRule {
+export class BulkFlatPricingRule implements IPricingRule {
     constructor(
         private paidProduct: Product,
         private bulkQty: number, // Threshold for determining if discount is valid

@@ -2,7 +2,7 @@ import { describe, expect, it } from "@jest/globals";
 import { Product } from "../product";
 import { TEST_PRODUCTS } from "./utils";
 import { IPricingRule } from "../pricingRules/IPricingRule";
-import { BulkFlatDiscountRule } from "../pricingRules/bulkFlatPricingRule";
+import { BulkFlatPricingRule } from "../pricingRules/bulkFlatPricingRule";
 
 const BULK_PRODUCT = TEST_PRODUCTS[0];
 const OTHER_PRODUCT = TEST_PRODUCTS[1];
@@ -10,7 +10,7 @@ const OTHER_PRODUCT = TEST_PRODUCTS[1];
 const DISCOUNT_QTY = 3;
 const DISCOUNT_VALUE = 123;
 
-const PRICING_RULE: IPricingRule = new BulkFlatDiscountRule(BULK_PRODUCT, DISCOUNT_QTY, DISCOUNT_VALUE);
+const PRICING_RULE: IPricingRule = new BulkFlatPricingRule(BULK_PRODUCT, DISCOUNT_QTY, DISCOUNT_VALUE);
 
 describe("pricing rule - bulk flat", () => {
     it("should give a discount of 0 if not enough items are in the checkout cart", () => {

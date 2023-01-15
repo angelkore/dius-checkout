@@ -2,8 +2,8 @@ import { describe, expect, it, beforeEach } from "@jest/globals";
 import { Product } from "../product";
 import { Checkout } from "../checkout";
 import { TEST_PRODUCTS } from "./utils";
-import { BulkQtyDiscountRule } from "../pricingRules/bulkQtyPricingRule";
-import { BulkFlatDiscountRule } from "../pricingRules/bulkFlatPricingRule";
+import { BulkQtyPricingRule } from "../pricingRules/bulkQtyPricingRule";
+import { BulkFlatPricingRule } from "../pricingRules/bulkFlatPricingRule";
 
 let testProducts: Product[] = TEST_PRODUCTS;
 
@@ -59,11 +59,11 @@ describe("checkout", () => {
         const bulkFlatProduct = testProducts[1];
 
         const bulkQty = 3;
-        const qtyPricingRule = new BulkQtyDiscountRule(bulkQtyProduct, bulkQty);
+        const qtyPricingRule = new BulkQtyPricingRule(bulkQtyProduct, bulkQty);
         
         const flatDiscountValue = 123;
         const flatQty = 3;
-        const flatPricingRule = new BulkFlatDiscountRule(bulkFlatProduct, flatQty, flatDiscountValue);
+        const flatPricingRule = new BulkFlatPricingRule(bulkFlatProduct, flatQty, flatDiscountValue);
 
         describe("bulk qty", () => {
             beforeEach(() => {

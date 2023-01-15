@@ -1,5 +1,7 @@
 export class Product {
-    sku: string;
-    name: string;
-    price: number;
+    constructor(
+        public sku: string,
+        public name: string,
+        public price: number
+    ) {}
 }

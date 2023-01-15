@@ -4,11 +4,14 @@
   "description": "dius-checkout test",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "jest"
   },
-  "author": "",
+  "author": "Callan",
   "license": "ISC",
-  "dependencies": {
-    "jest": "^29.3.1"
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "babel-jest": "^29.3.1",
+    "ts-jest": "^29.0.5"
   }
 }

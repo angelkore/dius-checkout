@@ -1,4 +1,4 @@
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, beforeEach } from "@jest/globals";
 import { Product } from "./product";
 import { Checkout } from "./checkout";
 import { PricingRule } from "./pricingRule";
@@ -12,7 +12,11 @@ let testProducts: Product[] = [
 
 const testPricingRules: PricingRule[] = [];
 
-const checkout: Checkout = new Checkout(testPricingRules);
+let checkout: Checkout;
+
+beforeEach(() => {
+    checkout = new Checkout(testPricingRules);
+})
 
 describe("checkout", () => {
     it("should give the correct price for a checkout", () => {
@@ -22,5 +26,17 @@ describe("checkout", () => {
         checkout.scan(testProducts[1]);
 
         expect(checkout.total()).toEqual(expectedTotal)
+    })
+
+    it("should give the correct price for multiple scanned items", () => {
+        const testProduct = testProducts[0];
+
+        const expectedTotal: number = testProduct.price * 3;
+
+        checkout.scan(testProduct);
+        checkout.scan(testProduct);
+        checkout.scan(testProduct);
+
+        expect(checkout.total()).toEqual(expectedTotal);
     })
 })

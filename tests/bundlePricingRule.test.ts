@@ -12,7 +12,7 @@ const OTHER_PRODUCT = TEST_PRODUCTS[2];
 
 const PRICING_RULE: IPricingRule = new BundlePricingRule(PAID_PRODUCT, FREE_PRODUCT);
 
-describe("pricing rule - bulk qty", () => {
+describe("pricing rule - bundle qty", () => {
     it("should give a discount of 0 if only the paid product is in the cart", () => {
         let testCart: Product[] = [
             PAID_PRODUCT,
@@ -57,6 +57,47 @@ describe("pricing rule - bulk qty", () => {
             PAID_PRODUCT,
             FREE_PRODUCT,
             OTHER_PRODUCT
+        ]
+
+        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(expectedDiscount);
+    })
+
+    it("should give a 2x discount if two paid and two free products are in cart", () => {
+        const expectedDiscount = FREE_PRODUCT.price * 2;
+
+        let testCart: Product[] = [
+            PAID_PRODUCT,
+            PAID_PRODUCT,
+            FREE_PRODUCT,
+            FREE_PRODUCT
+        ]
+
+        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(expectedDiscount);
+    })
+
+    it("should give a 2x discount if three paid and two free products are in cart", () => {
+        const expectedDiscount = FREE_PRODUCT.price * 2;
+
+        let testCart: Product[] = [
+            PAID_PRODUCT,
+            PAID_PRODUCT,
+            PAID_PRODUCT,
+            FREE_PRODUCT,
+            FREE_PRODUCT
+        ]
+
+        expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(expectedDiscount);
+    })
+
+    it("should give a 2x discount if two paid and three free products are in cart", () => {
+        const expectedDiscount = FREE_PRODUCT.price * 2;
+
+        let testCart: Product[] = [
+            PAID_PRODUCT,
+            PAID_PRODUCT,
+            FREE_PRODUCT,
+            FREE_PRODUCT,
+            FREE_PRODUCT
         ]
 
         expect(PRICING_RULE.calculateDiscountOnProductList(testCart)).toEqual(expectedDiscount);

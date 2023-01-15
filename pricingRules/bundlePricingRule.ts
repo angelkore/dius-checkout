@@ -9,11 +9,15 @@ export class BundlePricingRule implements IPricingRule {
     ) {};
 
     calculateDiscountOnProductList(products: Product[]): number {
-        const paidProductFound: boolean = products.indexOf(this.paidProduct) > -1;
-        const freeProductFound: boolean = products.indexOf(this.freeProduct) > -1;
+        const applicablePaidProducts = products.filter((product) => product.sku == this.paidProduct.sku);
+        const applicableFreeProducts = products.filter((product) => product.sku == this.freeProduct.sku);
 
-        const discountTotal = this.freeProduct.price;
+        const baseDiscountAmount = this.freeProduct.price;
 
-        return (paidProductFound && freeProductFound) ? discountTotal : 0;
+        // If we have multiple paid and free products, this will account for the amount of discounts to be applied
+        // E.G if 3 paid products and 2 free products in cart, will return 2*discount
+        const discountTotal = Math.min(applicableFreeProducts.length, applicablePaidProducts.length) * baseDiscountAmount;
+
+        return discountTotal;
     }
 }

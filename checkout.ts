@@ -1,11 +1,11 @@
-import { PricingRule } from "./pricingRule";
+import { IPricingRule } from "./pricingRules/IPricingRule";
 import { Product } from "./product";
 
 export class Checkout {
-    private pricingRules: Array<PricingRule> = [];
+    private pricingRules: Array<IPricingRule> = [];
     private scannedProducts: Array<Product> = [];
 
-    constructor(pricingRules: Array<object>) {
+    constructor(pricingRules: Array<IPricingRule>) {
         this.pricingRules = pricingRules;
     }
 
